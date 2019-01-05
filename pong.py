@@ -1,39 +1,58 @@
 from tkinter import *
 
-def movement():
+def movement_balle():
     global dbx, dby
     #rebondissement bord map
+    #a garder pour option
     """if (main_canvas.coords(balle)[0]>997) or (main_canvas.coords(balle)[2]==2):
         dbx=-1*dbx"""
-    if (main_canvas.coords(balle)[1]>600) or (main_canvas.coords(balle)[3]==0):
-        dby=-1*dby
-    #position
+    if (main_canvas.coords(balle)[1]>590) or (main_canvas.coords(balle)[3]==10):
+        dby =- 1*dby
+    #position balle
     main_canvas.move(balle,dbx,dby)
+    #collision balle raquette
+    if (main_canvas.coords(balle)[0] < main_canvas.coords(raquette_1)[2]) and (main_canvas.coords(balle)[3] < main_canvas.coords(raquette_1)[3]) and (main_canvas.coords(balle)[1] > main_canvas.coords(raquette_1)[1]):
+        dbx =- 1*dbx
+    if (main_canvas.coords(balle)[2] > main_canvas.coords(raquette_2)[0]) and (main_canvas.coords(balle)[3] < main_canvas.coords(raquette_2)[3]) and (main_canvas.coords(balle)[1] > main_canvas.coords(raquette_2)[1]):
+        dbx =- 1*dbx
     #loop
+    pong.after(10,movement_balle)
 
-    if (main_canvas.coords(raquette_1)[1]<600) or (main_canvas.coords(raquette_1)[3]==0):
-        def haut(event):
-            main_canvas.move(raquette_1, 0, -10)
-        def bas(event):
-            main_canvas.move(raquette_1, 0, 10)
-        main_canvas.bind_all("z", haut)
-        main_canvas.bind_all("s", bas)
+def movement_raquette1():
 
-    if (main_canvas.coords(raquette_2)[1]<600) or (main_canvas.coords(raquette_2)[3]==0):
-        def haut2(event):
+    #vérification dépassage raquette bordure haute
+    if (main_canvas.coords(raquette_1)[1]<0):
+        main_canvas.move(raquette_1, 0, 1)
+    #vérification dépassage raquette bordure bassse
+    if (main_canvas.coords(raquette_1)[3]>600):
+        main_canvas.move(raquette_1, 0, -1)
+    #deplacement raquette 1
+    def haut(event):
+        main_canvas.move(raquette_1, 0, -10)
+    def bas(event):
+        main_canvas.move(raquette_1, 0, 10)
+    main_canvas.bind_all("z", haut)
+    main_canvas.bind_all("s", bas)
+
+    pong.after(1,movement_raquette1)
+
+def movement_raquette2():
+    #vérification dépassage raquette bordure haute
+    if (main_canvas.coords(raquette_2)[1]<0):
+        main_canvas.move(raquette_2, 0, 1)
+    #vérification dépassage raquette bordure basse
+    if (main_canvas.coords(raquette_2)[3]>600):
+        main_canvas.move(raquette_2, 0, -1)
+    #déplacement raquette 2
+    def haut2(event):
             main_canvas.move(raquette_2, 0, -10)
-        def bas2(event):
-            main_canvas.move(raquette_2, 0, 10)
-        main_canvas.bind_all("<Up>", haut2)
-        main_canvas.bind_all("<Down>", bas2)
+    def bas2(event):
+        main_canvas.move(raquette_2, 0, 10)
+    main_canvas.bind_all("<Up>", haut2)
+    main_canvas.bind_all("<Down>", bas2)
 
-    """if (main_canvas.coords(balle)[0] == main_canvas.coords(raquette_1)[0]) and (main_canvas.coords(balle)[3] < main_canvas.coords(raquette_1)[3]):
-        dbx =-1*dbx"""
-    if (main_canvas.coords(balle)[0] == main_canvas.coords(raquette_2)[0]) and (main_canvas.coords(balle)[3] < main_canvas.coords(raquette_2)[3]):
-        dbx =-1*dbx
-    if (main_canvas.coords(balle)[0] < main_canvas.coords(raquette_1)[2]) and (main_canvas.coords(balle)[3] < main_canvas.coords(raquette_1)[1]) and (main_canvas.coords(balle)[1] > main_canvas.coords(raquette_1)[3]):
-        dbx =-1*dbx
-    pong.after(10,movement)
+    pong.after(1,movement_raquette2)
+    
 
 
 
@@ -60,14 +79,16 @@ raquette_2 = main_canvas.create_rectangle(Pos_rX2,Pos_rY2,Pos_rX2-10, Pos_rY2+70
 #touche mouvement
 
 #position balle
-Pos_bX = 500
-Pos_bY = 300
+Pos_bX = 490
+Pos_bY = 290
 #balle
 balle = main_canvas.create_oval(Pos_bX, Pos_bY,Pos_bX+20,Pos_bY+20, fill='white')
 #amplitude mouvement balle
 dbx = -2
-dby = 2
+dby = 1
 
 #appelle fonction
-movement()
+movement_balle()
+movement_raquette1()
+movement_raquette2()
 pong.mainloop()
